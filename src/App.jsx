@@ -1,4 +1,6 @@
+// src/App.jsx
 import { useState, useEffect } from 'react'
+import FamilyScreen from './screens/FamilyScreen'
 
 function SunMoon({ mode, onToggle }) {
   return (
@@ -6,7 +8,7 @@ function SunMoon({ mode, onToggle }) {
       onClick={onToggle}
       aria-label="Toggle theme"
       style={{
-        position: 'absolute', top: '1.25rem', right: '1.25rem',
+        position: 'absolute', top: '1.25rem', right: '1.25rem', zIndex: 10,
         width: 34, height: 34, borderRadius: '50%',
         border: '1px solid var(--rule)',
         background: 'transparent',
@@ -29,18 +31,16 @@ function SunMoon({ mode, onToggle }) {
   )
 }
 
-export default function App() {
-  const [mode, setMode] = useState('light')
-
-  // Apply theme to <html> so CSS variables switch globally
-  useEffect(() => {
-    document.documentElement.setAttribute('data-theme', mode)
-  }, [mode])
+function HomeScreen({ onNavigate }) {
+  const sections = [
+    { id: 'family',   label: 'Family',        desc: 'Who we cook for' },
+    { id: 'shopping', label: 'Shopping list', desc: 'Coming soon' },
+    { id: 'mealplan', label: 'Meal plan',     desc: 'Coming soon' },
+    { id: 'recipes',  label: 'Recipes',       desc: 'Coming soon' },
+  ]
 
   return (
     <div style={{ minHeight: '100vh', padding: '1.5rem 1.25rem', position: 'relative' }}>
-      <SunMoon mode={mode} onToggle={() => setMode(mode === 'light' ? 'dark' : 'light')} />
-
       <div style={{ marginTop: '0.5rem', paddingBottom: '1rem', borderBottom: '1px solid var(--rule)' }}>
         <div style={{
           fontSize: '0.7rem', letterSpacing: '0.3em',
@@ -63,26 +63,48 @@ export default function App() {
       </div>
 
       <div style={{ marginTop: '2rem', display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-        {['Shopping list', 'Meal plan', 'Recipes', 'Settings'].map(label => (
-          <div key={label} style={{
-            padding: '1rem 1.25rem',
-            border: '1px solid var(--rule)',
-            borderRadius: '0.75rem',
-            display: 'flex', justifyContent: 'space-between', alignItems: 'center',
-          }}>
-            <span className="serif italic" style={{ fontSize: '1.3rem' }}>{label}</span>
+        {sections.map(s => (
+          <div
+            key={s.id}
+            onClick={() => onNavigate(s.id)}
+            style={{
+              padding: '1rem 1.25rem',
+              border: '1px solid var(--rule)',
+              borderRadius: '0.75rem',
+              display: 'flex', justifyContent: 'space-between', alignItems: 'center',
+              cursor: 'pointer', transition: 'background 0.15s',
+            }}
+            onMouseEnter={e => e.currentTarget.style.background = 'rgba(198,107,61,0.04)'}
+            onMouseLeave={e => e.currentTarget.style.background = 'transparent'}
+          >
+            <div>
+              <div className="serif italic" style={{ fontSize: '1.3rem' }}>{s.label}</div>
+              <div style={{ fontSize: '0.78rem', color: 'var(--ink-faint)', marginTop: '0.1rem' }}>
+                {s.desc}
+              </div>
+            </div>
             <span style={{ color: 'var(--ink-faint)' }}>→</span>
           </div>
         ))}
       </div>
-
-      <div style={{
-        marginTop: '3rem', textAlign: 'center',
-        fontSize: '0.65rem', letterSpacing: '0.25em',
-        textTransform: 'uppercase', color: 'var(--ink-faint)',
-      }}>
-        Step 4 of setup · Tap the {mode === 'light' ? 'moon' : 'sun'} to change mood
-      </div>
     </div>
+  )
+}
+
+export default function App() {
+  const [mode, setMode] = useState('light')
+  const [route, setRoute] = useState('home')  // 'home' | 'family' | etc.
+
+  useEffect(() => {
+    document.documentElement.setAttribute('data-theme', mode)
+  }, [mode])
+
+  return (
+    <>
+      <SunMoon mode={mode} onToggle={() => setMode(mode === 'light' ? 'dark' : 'light')} />
+      {route === 'home'   && <HomeScreen onNavigate={setRoute} />}
+      {route === 'family' && <FamilyScreen onBack={() => setRoute('home')} />}
+      {/* Other routes added here as we build them */}
+    </>
   )
 }
