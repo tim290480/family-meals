@@ -1,0 +1,52 @@
+/* Font imports */
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600&family=Fraunces:ital,wght@0,400;0,600;1,400;1,600&display=swap');
+
+/* Resets */
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { height: 100%; }
+body {
+  font-family: 'Outfit', -apple-system, BlinkMacSystemFont, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overscroll-behavior: none;
+}
+
+/* Editorial theme CSS variables — light mode default */
+:root {
+  --bg: #F8F1E3;
+  --bg-atmosphere: radial-gradient(circle at 90% 5%, rgba(198,107,61,0.06) 0%, transparent 60%);
+  --ink: #2A1F2E;
+  --ink-muted: #6E5A42;
+  --ink-faint: #8A6E4E;
+  --rule: #D9C9A8;
+  --accent: #C66B3D;
+  --accent-ink: #F8F1E3;
+  --check-border: #2A1F2E;
+}
+
+/* Dark mode — applied when <html data-theme="dark"> */
+html[data-theme="dark"] {
+  --bg: #131110;
+  --bg-atmosphere: radial-gradient(circle at 85% 8%, rgba(198,107,61,0.10) 0%, transparent 55%);
+  --ink: #F4EBD5;
+  --ink-muted: #A89A7D;
+  --ink-faint: #7A6F5C;
+  --rule: #3A3226;
+  --accent: #D4884B;
+  --accent-ink: #131110;
+  --check-border: #A89A7D;
+}
+
+body {
+  background: var(--bg);
+  background-image: var(--bg-atmosphere);
+  color: var(--ink);
+  transition: background 0.35s, color 0.35s;
+  min-height: 100vh;
+}
+
+/* Reusable bits */
+.serif { font-family: 'Fraunces', Georgia, serif; }
+.italic { font-style: italic; }
+
+button { font-family: inherit; }
